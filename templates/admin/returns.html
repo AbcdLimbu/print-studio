@@ -1,0 +1,79 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Return Requests - Admin{% endblock %}
+{% block page_title %}Return Requests{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-0">
+        {% if returns %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead style="background: #f8f9fa;">
+                    <tr>
+                        <th class="px-4 py-3 text-muted small">#</th>
+                        <th class="py-3 text-muted small">Customer</th>
+                        <th class="py-3 text-muted small">Order</th>
+                        <th class="py-3 text-muted small">Reason</th>
+                        <th class="py-3 text-muted small">Resolution</th>
+                        <th class="py-3 text-muted small">Photo</th>
+                        <th class="py-3 text-muted small">Date</th>
+                        <th class="py-3 text-muted small">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for return_req in returns %}
+                    <tr>
+                        <td class="px-4 small">{{ return_req.id }}</td>
+                        <td class="small">
+                            {{ return_req.user.name }}<br>
+                            <span class="text-muted">{{ return_req.user.phone }}</span>
+                        </td>
+                        <td class="small">
+                            <span class="badge rounded-pill" style="background:#fff3e0; color:var(--accent);">{{ return_req.order_type | capitalize }}</span>
+                            <span class="d-block text-muted">#{{ return_req.order_id }}</span>
+                        </td>
+                        <td class="small" style="max-width:180px;">{{ return_req.reason }}</td>
+                        <td>
+                            {% if return_req.resolution == 'replacement' %}
+                            <span class="badge rounded-pill" style="background:#e3f2fd; color:#1565c0;">
+                                <i class="fas fa-box me-1"></i>Replacement
+                            </span>
+                            {% else %}
+                            <span class="badge rounded-pill" style="background:#e8f5e9; color:#2e7d32;">
+                                <i class="fas fa-rupee-sign me-1"></i>Refund
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if return_req.image_url %}
+                            <a href="{{ return_req.image_url }}" target="_blank">
+                                <img src="{{ return_req.image_url }}" style="width:50px; height:50px; object-fit:cover; border-radius:8px;">
+                            </a>
+                            {% else %}
+                            <span class="text-muted small">No photo</span>
+                            {% endif %}
+                        </td>
+                        <td class="small text-muted">{{ return_req.created_at.strftime('%d %b %Y') }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.update_return', id=return_req.id) }}">
+                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width:120px;">
+                                    {% for status in ['Pending', 'Reviewing', 'Accepted', 'Rejected'] %}
+                                    <option {% if return_req.status == status %}selected{% endif %}>{{ status }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-undo fa-3x text-muted mb-3"></i>
+            <p class="text-muted">No return requests yet — great news! 🎉</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

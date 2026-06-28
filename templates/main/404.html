@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Page Not Found - Print Studio{% endblock %}
+
+{% block content %}
+<section style="min-height: 70vh; display: flex; align-items: center;">
+    <div class="container text-center" data-aos="zoom-in">
+        <h1 class="fw-bold mb-0" style="font-size: 8rem; color: var(--accent); line-height: 1;">404</h1>
+        <h3 class="fw-bold mb-3" style="color: var(--primary);">Page Not Found</h3>
+        <p class="text-muted mb-4">Oops! The page you're looking for doesn't exist or has been moved.</p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="{{ url_for('main.home') }}" class="btn btn-warning fw-semibold px-4">
+                <i class="fas fa-home me-2"></i>Go Home
+            </a>
+            <a href="{{ url_for('main.contact') }}" class="btn btn-outline-secondary px-4">
+                <i class="fas fa-envelope me-2"></i>Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

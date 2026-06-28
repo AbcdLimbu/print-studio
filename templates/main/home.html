@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% block title %}Print Studio{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section style="background: linear-gradient(135deg, #1a2e4a 0%, #2d4f7c 100%); min-height: 95vh; display: flex; align-items: center;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-white" data-aos="fade-right">
+                <span class="badge mb-3 px-3 py-2" style="background-color: var(--accent); font-size: 0.85rem;">Complete Printing Solutions</span>
+                <h1 class="display-4 fw-bold mb-4">Print Your <span style="color: var(--highlight);">Ideas</span> Into Reality</h1>
+                <p class="lead mb-4 text-white-50">From business cards to banners, bill books to brochures — we deliver premium quality printing at affordable prices, right to your doorstep.</p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{{ url_for('products.index') }}" class="btn btn-accent btn-lg px-4 fw-semibold" style="background: var(--accent);">
+                        <i class="fas fa-shopping-bag me-2"></i>Shop Now
+                    </a>
+                    <a href="{{ url_for('services.index') }}" class="btn btn-outline-light btn-lg px-4 fw-semibold">
+                        <i class="fas fa-print me-2"></i>Our Services
+                    </a>
+                </div>
+
+                <!-- Stats -->
+                <div class="row mt-5 g-3">
+                    <div class="col-4 text-center">
+                        <div style="background: rgba(255,255,255,0.07); border-radius: 16px; padding: 18px 10px; border: 1px solid rgba(255,255,255,0.1);">
+                            <h3 class="fw-bold mb-0" style="color: var(--highlight); font-size: 2rem;">
+                                <span class="counter" data-target="500">0</span>+
+                            </h3>
+                            <small class="text-white-50">Happy Clients</small>
+                        </div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div style="background: rgba(255,255,255,0.07); border-radius: 16px; padding: 18px 10px; border: 1px solid rgba(255,255,255,0.1);">
+                            <h3 class="fw-bold mb-0" style="color: var(--highlight); font-size: 2rem;">
+                                <span class="counter" data-target="10">0</span>+
+                            </h3>
+                            <small class="text-white-50">Years Experience</small>
+                        </div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <div style="background: rgba(255,255,255,0.07); border-radius: 16px; padding: 18px 10px; border: 1px solid rgba(255,255,255,0.1);">
+                            <h3 class="fw-bold mb-0" style="color: var(--highlight); font-size: 2rem;">24hr</h3>
+                            <small class="text-white-50">Fast Delivery</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 text-center mt-5 mt-lg-0" data-aos="fade-left">
+                <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 40px; border: 1px solid rgba(255,255,255,0.1);">
+                    <i class="fas fa-print" style="font-size: 8rem; color: var(--highlight); opacity: 0.8;"></i>
+                    <div class="row mt-4 g-2">
+                        {% set quick_links = [
+                            ('fas fa-id-card', 'ID Cards', 'products.index'),
+                            ('fas fa-book', 'Bill Books', 'products.index'),
+                            ('fas fa-scroll', 'Brochures', 'services.index'),
+                            ('fas fa-trophy', 'Trophies', 'products.index')
+                        ] %}
+                        {% for icon, label, endpoint in quick_links %}
+                        <div class="col-6">
+                            <a href="{{ url_for(endpoint) }}" class="text-decoration-none">
+                                <div class="hero-card" style="background: rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s ease; cursor: pointer;">
+                                    <i class="{{ icon }} fa-lg mb-2" style="color: var(--highlight);"></i>
+                                    <p class="text-white mb-0 small fw-semibold">{{ label }}</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Strip — seamless, no gap -->
+<section style="background: rgba(245, 165, 35, 0.362); border-top: 1px solid rgba(245,166,35,0.2); border-bottom: 1px solid rgba(245,166,35,0.2);" class="py-3">
+    <div class="container">
+        <div class="row text-center g-2">
+            <div class="col-6 col-md-3">
+                <p class="mb-0 fw-semibold" style="color: var(--primary);"><i class="fas fa-truck me-2" style="color: var(--accent);"></i>Fast Delivery</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <p class="mb-0 fw-semibold" style="color: var(--primary);"><i class="fas fa-tags me-2" style="color: var(--accent);"></i>Affordable Pricing</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <p class="mb-0 fw-semibold" style="color: var(--primary);"><i class="fas fa-star me-2" style="color: var(--accent);"></i>Best Quality</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <p class="mb-0 fw-semibold" style="color: var(--primary);"><i class="fas fa-smile me-2" style="color: var(--accent);"></i>Customer Satisfaction</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="badge px-3 py-2 mb-2" style="background-color: #fff3e0; color: var(--accent);">What We Offer</span>
+            <h2 class="fw-bold" style="color: var(--primary);">Our Printing Services</h2>
+            <p class="text-muted">Professional printing solutions for every need</p>
+        </div>
+        <div class="row g-4">
+            {% set services_list = [
+                ('fas fa-print', 'Digital Printing', 'High quality digital prints for all your needs with vibrant colors.', '#e3f2fd'),
+                ('fas fa-layer-group', 'Offset Printing', 'Perfect for bulk printing with consistent quality every time.', '#f3e5f5'),
+                ('fas fa-book', 'Bill Books', 'Custom bill books and invoice pads for your business.', '#e8f5e9'),
+                ('fas fa-file-alt', 'Letter Heads', 'Professional letterheads that make your brand stand out.', '#fff3e0'),
+                ('fas fa-newspaper', 'Brochures', 'Eye-catching brochures to promote your business effectively.', '#fce4ec'),
+                ('fas fa-id-card', 'ID Cards', 'Durable ID cards and lanyards for employees and events.', '#e0f7fa'),
+                ('fas fa-chalkboard', 'Sunpack Boards', 'Advertising displays and boards for outdoor promotions.', '#f1f8e9'),
+                ('fas fa-paint-brush', 'Custom Designs', 'Premium finishing with customized designs for special occasions.', '#ede7f6')
+            ] %}
+            {% for icon, name, desc, bg in services_list %}
+            <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="card border-0 h-100 text-center p-4 rounded-4 shadow-sm" style="background  : {{ bg }}; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-8px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div class="mb-3">
+                        <i class="{{ icon }} fa-2x" style="color: var(--primary);"></i>
+                    </div>
+                    <h6 class="fw-bold" style="color: var(--primary);">{{ name }}</h6>
+                    <p class="text-muted small mb-0">{{ desc }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('services.index') }}" class="btn btn-accent px-4 fw-semibold">View All Services</a>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="py-5" style="background: var(--primary);">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="badge px-3 py-2 mb-2" style="background-color: var(--accent);">Why Us</span>
+            <h2 class="fw-bold text-white">Why Choose Print Studio?</h2>
+        </div>
+        <div class="row g-4">
+            {% set reasons = [
+                ('fas fa-bolt', 'Fast Turnaround', 'We understand deadlines. Get your prints delivered within 24 hours.'),
+                ('fas fa-medal', 'Premium Quality', 'We use the latest technology to ensure crisp, vibrant, long-lasting prints.'),
+                ('fas fa-hand-holding-usd', 'Best Prices', 'Competitive pricing without compromising on quality. Value for money.'),
+                ('fas fa-headset', 'Great Support', 'Our team is always ready to help you with your printing needs.')
+            ] %}
+            {% for icon, title, desc in reasons %}
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="text-center p-4">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:70px; height:70px; background: var(--accent);">
+                        <i class="{{ icon }} fa-lg text-white"></i>
+                    </div>
+                    <h6 class="fw-bold text-white">{{ title }}</h6>
+                    <p class="text-white-50 small mb-0">{{ desc }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="rounded-4 p-5 text-center" style="background: linear-gradient(135deg, #f5a623, #e09400);" data-aos="zoom-in">
+            <h2 class="fw-bold text-white mb-3">Ready to Start Printing?</h2>
+            <p class="text-white mb-4">Join hundreds of satisfied customers who trust Print Studio for their printing needs.</p>
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-dark btn-lg px-4 fw-semibold">Get Started</a>
+                <a href="https://wa.me/911112220000" class="btn btn-outline-dark btn-lg px-4 fw-semibold" target="_blank">
+                    <i class="fab fa-whatsapp me-2"></i>WhatsApp Us
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% block extra_js %}
+<script>
+// Counter animation
+const counters = document.querySelectorAll('.counter');
+counters.forEach(counter => {
+    const target = +counter.getAttribute('data-target');
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            counter.textContent = target;
+            clearInterval(timer);
+        } else {
+            counter.textContent = Math.floor(current);
+        }
+    }, 16);
+});
+
+// Hero card hover
+document.querySelectorAll('.hero-card').forEach(card => {
+    card.addEventListener('mouseover', () => {
+        card.style.background = 'rgba(245, 166, 35, 0.2)';
+        card.style.transform = 'translateY(-6px)';
+        card.style.borderColor = 'rgba(245,166,35,0.4)';
+    });
+    card.addEventListener('mouseout', () => {
+        card.style.background = 'rgba(255,255,255,0.08)';
+        card.style.transform = 'translateY(0)';
+        card.style.borderColor = 'rgba(255,255,255,0.08)';
+    });
+});
+</script>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,393 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} - Print Studio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .thumbnail-img {
+        width: 70px; height: 70px; object-fit: cover;
+        border-radius: 8px; cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.2s;
+    }
+    .thumbnail-img.active { border-color: var(--accent); }
+    .thumbnail-img:hover { border-color: var(--accent); transform: scale(1.05); }
+
+    .variant-btn {
+        border: 2px solid #ddd;
+        background: white;
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .variant-btn:hover, .variant-btn.active {
+        border-color: var(--accent);
+        background: #fff3e0;
+        color: var(--primary);
+        font-weight: 600;
+    }
+    .variant-btn.color-btn {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        padding: 0;
+    }
+
+    /* Zoom Modal */
+    .zoom-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+    .zoom-overlay.active { display: flex; }
+    .zoom-overlay img { max-width: 90%; max-height: 90vh; border-radius: 12px; }
+    .zoom-close {
+        position: absolute;
+        top: 20px; right: 30px;
+        color: white; font-size: 2rem;
+        cursor: pointer; background: none; border: none;
+    }
+
+    .wishlist-btn { transition: all 0.2s; }
+    .wishlist-btn:hover { transform: scale(1.05); }
+
+    .trust-badge {
+        display: flex; align-items: center;
+        gap: 8px; padding: 10px;
+        border-radius: 8px;
+        background: #f8f9fa;
+        font-size: 0.8rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.home') }}" style="color: var(--accent);">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('products.index') }}" style="color: var(--accent);">Products</a></li>
+                {% if product.category %}
+                <li class="breadcrumb-item"><a href="{{ url_for('products.index', category=product.category) }}" style="color: var(--accent);">{{ product.category }}</a></li>
+                {% endif %}
+                <li class="breadcrumb-item active text-muted">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="row g-5">
+
+            <!-- Images Section -->
+            <div class="col-lg-5" data-aos="fade-right">
+                <!-- Main Image -->
+                <div class="rounded-4 overflow-hidden shadow-sm mb-3 position-relative" style="height: 400px; background: #f8f9fa; cursor: zoom-in;" onclick="openZoom(document.getElementById('main-image').src)">
+                    {% if product.images %}
+                    <img id="main-image" src="{{ product.images[0].image_url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
+                    {% elif product.image_url %}
+                    <img id="main-image" src="{{ product.image_url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
+                    {% else %}
+                    <div class="d-flex align-items-center justify-content-center h-100">
+                        <i class="fas fa-box fa-5x text-muted"></i>
+                    </div>
+                    {% endif %}
+                    <div class="position-absolute bottom-0 end-0 m-3">
+                        <span class="badge" style="background: rgba(0,0,0,0.5); color:white; font-size:0.7rem;">
+                            <i class="fas fa-search-plus me-1"></i>Click to zoom
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Thumbnails -->
+                {% if product.images and product.images|length > 1 %}
+                <div class="d-flex gap-2 flex-wrap">
+                    {% for img in product.images %}
+                    <img src="{{ img.image_url }}"
+                         class="thumbnail-img {% if loop.first %}active{% endif %}"
+                         onclick="changeImage(this, '{{ img.image_url }}')"
+                         alt="View {{ loop.index }}">
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-lg-7" data-aos="fade-left">
+                {% if product.category %}
+                <span class="badge rounded-pill mb-2 px-3 py-2" style="background: #fff3e0; color: var(--accent);">{{ product.category }}</span>
+                {% endif %}
+
+                <h2 class="fw-bold mb-2" style="color: var(--primary);">{{ product.name }}</h2>
+
+                <!-- Price -->
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <h3 class="fw-bold mb-0" style="color: var(--accent);" id="current-price">₹{{ product.price }}</h3>
+                    {% if product.stock > 0 and product.stock <= 5 %}
+                    <span class="badge rounded-pill" style="background: #ffebee; color: #c62828;">
+                        <i class="fas fa-fire me-1"></i>Only {{ product.stock }} left!
+                    </span>
+                    {% elif product.stock > 5 %}
+                    <span class="badge rounded-pill" style="background: #e8f5e9; color: #2e7d32;">
+                        <i class="fas fa-check-circle me-1"></i>In Stock
+                    </span>
+                    {% else %}
+                    <span class="badge rounded-pill" style="background: #ffebee; color: #c62828;">
+                        <i class="fas fa-times-circle me-1"></i>Out of Stock
+                    </span>
+                    {% endif %}
+                </div>
+
+                {% if product.description %}
+                <p class="text-muted mb-4">{{ product.description }}</p>
+                {% endif %}
+
+                <!-- Variants -->
+                {% if product.variants %}
+                    {% set variant_types = product.variants | map(attribute='variant_type') | unique | list %}
+                    {% for vtype in variant_types %}
+                    <div class="mb-3">
+                        <label class="fw-semibold mb-2 d-block" style="color: var(--primary);">
+                            {{ vtype }}: <span class="text-muted fw-normal" id="selected-{{ vtype | lower }}">Select {{ vtype }}</span>
+                        </label>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for variant in product.variants %}
+                            {% if variant.variant_type == vtype %}
+                            <button type="button"
+                                class="variant-btn"
+                                data-type="{{ vtype }}"
+                                data-value="{{ variant.variant_value }}"
+                                data-price="{{ variant.extra_price }}"
+                                data-stock="{{ variant.stock }}"
+                                onclick="selectVariant(this)">
+                                {{ variant.variant_value }}
+                                {% if variant.extra_price > 0 %}+₹{{ variant.extra_price }}{% endif %}
+                            </button>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Specifications -->
+                {% if product.attributes %}
+                <div class="mb-4">
+                    <h6 class="fw-bold mb-3" style="color: var(--primary);">Specifications</h6>
+                    <table class="table table-bordered rounded-3 overflow-hidden">
+                        <tbody>
+                            {% for attr in product.attributes %}
+                            <tr>
+                                <td class="fw-semibold text-muted small" style="width:40%; background:#f8f9fa;">{{ attr.attribute_name }}</td>
+                                <td class="small">{{ attr.attribute_value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+
+                <!-- Action Buttons -->
+                {% if product.stock > 0 %}
+                <div class="d-flex gap-2 flex-wrap mb-4">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('orders.place_product_order', product_id=product.id) }}" class="btn btn-warning btn-lg fw-semibold px-4">
+                        <i class="fas fa-shopping-cart me-2"></i>Order Now
+                    </a>
+                    <a href="{{ url_for('orders.add_to_wishlist', product_id=product.id) }}" class="btn btn-outline-danger btn-lg wishlist-btn px-4">
+                        <i class="fas fa-heart me-2"></i>Wishlist
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-warning btn-lg fw-semibold px-4">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login to Order
+                    </a>
+                    {% endif %}
+                    <a href="https://wa.me/911112220000?text=Hi, I'm interested in {{ product.name }}" target="_blank" class="btn btn-outline-success btn-lg px-4">
+                        <i class="fab fa-whatsapp me-2"></i>Enquire
+                    </a>
+                </div>
+                {% else %}
+                <div class="d-flex gap-2 mb-4">
+                    <button class="btn btn-secondary btn-lg px-4" disabled>Out of Stock</button>
+                    <a href="https://wa.me/911112220000?text=Hi, is {{ product.name }} available?" target="_blank" class="btn btn-outline-success btn-lg px-4">
+                        <i class="fab fa-whatsapp me-2"></i>Ask Availability
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Trust Badges -->
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="trust-badge">
+                            <i class="fas fa-truck" style="color: var(--accent);"></i>
+                            <span class="text-muted">Fast Delivery</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="trust-badge">
+                            <i class="fas fa-shield-alt" style="color: var(--accent);"></i>
+                            <span class="text-muted">Quality Guaranteed</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="trust-badge">
+                            <i class="fas fa-undo" style="color: var(--accent);"></i>
+                            <span class="text-muted">Easy Returns</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="trust-badge">
+                            <i class="fab fa-whatsapp" style="color: #25d366;"></i>
+                            <span class="text-muted">WhatsApp Support</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="mt-5" data-aos="fade-up">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h5 class="fw-bold mb-0" style="color: var(--primary);">Customer Reviews</h5>
+                {% if avg_rating > 0 %}
+                <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex gap-1">
+                        {% for i in range(1, 6) %}
+                        <i class="fas fa-star" style="color: {% if i <= avg_rating %}var(--accent){% else %}#ddd{% endif %};"></i>
+                        {% endfor %}
+                    </div>
+                    <span class="fw-bold" style="color: var(--primary);">{{ avg_rating }}/5</span>
+                    <span class="text-muted small">({{ reviews|length }} reviews)</span>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if reviews %}
+            <div class="row g-4">
+                {% for review in reviews %}
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:45px; height:45px; background: var(--accent);">
+                                <span class="text-white fw-bold">{{ review.user.name[0].upper() }}</span>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0" style="color: var(--primary);">{{ review.user.name }}</h6>
+                                <div class="d-flex gap-1">
+                                    {% for i in range(1, 6) %}
+                                    <i class="fas fa-star small" style="color: {% if i <= review.rating %}var(--accent){% else %}#ddd{% endif %};"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <small class="text-muted ms-auto">{{ review.created_at.strftime('%d %b %Y') }}</small>
+                        </div>
+                        {% if review.review %}
+                        <p class="text-muted small mb-0">{{ review.review }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-4" style="background: #f8f9fa; border-radius: 16px;">
+                <i class="fas fa-star fa-2x text-muted mb-2"></i>
+                <p class="text-muted mb-0">No reviews yet — be the first to review!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Related Products -->
+        {% if related %}
+        <div class="mt-5" data-aos="fade-up">
+            <h5 class="fw-bold mb-4" style="color: var(--primary);">You May Also Like</h5>
+            <div class="row g-4">
+                {% for item in related %}
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card border-0 shadow-sm rounded-4 h-100" style="transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="height:150px; overflow:hidden; background:#f8f9fa; border-radius: 16px 16px 0 0;">
+                            {% if item.images %}
+                            <img src="{{ item.images[0].image_url }}" alt="{{ item.name }}" style="width:100%; height:100%; object-fit:cover;">
+                            {% elif item.image_url %}
+                            <img src="{{ item.image_url }}" alt="{{ item.name }}" style="width:100%; height:100%; object-fit:cover;">
+                            {% else %}
+                            <div class="d-flex align-items-center justify-content-center h-100">
+                                <i class="fas fa-box fa-2x text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-body p-3">
+                            <h6 class="fw-bold small mb-1" style="color: var(--primary);">{{ item.name }}</h6>
+                            <p class="fw-bold mb-2" style="color: var(--accent);">₹{{ item.price }}</p>
+                            <a href="{{ url_for('products.detail', id=item.id) }}" class="btn btn-sm btn-warning w-100">View</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<!-- Zoom Modal -->
+<div class="zoom-overlay" id="zoom-overlay" onclick="closeZoom()">
+    <button class="zoom-close" onclick="closeZoom()"><i class="fas fa-times"></i></button>
+    <img id="zoom-image" src="" alt="Zoomed Image">
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Image switcher
+function changeImage(thumb, url) {
+    document.getElementById('main-image').src = url;
+    document.querySelectorAll('.thumbnail-img').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+}
+
+// Zoom
+function openZoom(src) {
+    document.getElementById('zoom-image').src = src;
+    document.getElementById('zoom-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeZoom() {
+    document.getElementById('zoom-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeZoom();
+});
+
+// Variant selection
+const basePrice = {{ product.price }};
+function selectVariant(btn) {
+    const type = btn.getAttribute('data-type');
+    const value = btn.getAttribute('data-value');
+    const isActive = btn.classList.contains('active');
+
+    document.querySelectorAll(`.variant-btn[data-type="${type}"]`).forEach(b => b.classList.remove('active'));
+
+    if (!isActive) {
+        btn.classList.add('active');
+        document.getElementById(`selected-${type.toLowerCase()}`).textContent = value;
+    } else {
+        document.getElementById(`selected-${type.toLowerCase()}`).textContent = `Select ${type}`;
+    }
+
+    let total = basePrice;
+    document.querySelectorAll('.variant-btn.active').forEach(b => {
+        total += parseFloat(b.getAttribute('data-price')) || 0;
+    });
+    document.getElementById('current-price').textContent = '₹' + total.toFixed(2);
+}
+</script>
+{% endblock %}

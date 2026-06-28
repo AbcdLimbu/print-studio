@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}My Profile - Print Studio{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <!-- Profile Header -->
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4" style="background: linear-gradient(135deg, #1a2e4a, #2d4f7c);">
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:80px; height:80px; background: var(--accent);">
+                            <h2 class="text-white fw-bold mb-0">{{ current_user.name[0].upper() }}</h2>
+                        </div>
+                        <div>
+                            <h4 class="text-white fw-bold mb-1">{{ current_user.name }}</h4>
+                            <p class="text-white-50 mb-1"><i class="fas fa-envelope me-2"></i>{{ current_user.email }}</p>
+                            <p class="text-white-50 mb-0"><i class="fas fa-calendar me-2"></i>Member since {{ current_user.created_at.strftime('%B %Y') }}</p>
+                        </div>
+                        <div class="ms-auto">
+                            <a href="{{ url_for('orders.edit_profile') }}" class="btn btn-warning fw-semibold px-4">
+                                <i class="fas fa-edit me-2"></i>Edit Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Details -->
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <h6 class="fw-bold mb-4" style="color: var(--primary);">Personal Information</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="text-muted small">Full Name</label>
+                            <p class="fw-semibold mb-0" style="color: var(--primary);">{{ current_user.name }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Email Address</label>
+                            <p class="fw-semibold mb-0" style="color: var(--primary);">{{ current_user.email }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Phone Number</label>
+                            <p class="fw-semibold mb-0" style="color: var(--primary);">{{ current_user.phone or 'Not provided' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="text-muted small">Delivery Address</label>
+                            <p class="fw-semibold mb-0" style="color: var(--primary);">{{ current_user.address or 'Not provided' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <a href="{{ url_for('orders.dashboard') }}" class="card border-0 shadow-sm rounded-4 p-4 text-center text-decoration-none" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <i class="fas fa-shopping-bag fa-2x mb-2" style="color: var(--accent);"></i>
+                            <p class="fw-semibold mb-0" style="color: var(--primary);">My Orders</p>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{{ url_for('orders.wishlist') }}" class="card border-0 shadow-sm rounded-4 p-4 text-center text-decoration-none" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <i class="fas fa-heart fa-2x mb-2" style="color: var(--accent);"></i>
+                            <p class="fw-semibold mb-0" style="color: var(--primary);">My Wishlist</p>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{{ url_for('services.index') }}" class="card border-0 shadow-sm rounded-4 p-4 text-center text-decoration-none" style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                            <i class="fas fa-print fa-2x mb-2" style="color: var(--accent);"></i>
+                            <p class="fw-semibold mb-0" style="color: var(--primary);">Our Services</p>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

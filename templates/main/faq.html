@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block title %}Contact Us - Print Studio{% endblock %}
+
+{% block content %}
+
+<!-- Hero -->
+<section style="background: linear-gradient(135deg, #1a2e4a 0%, #2d4f7c 60%, #1a2e4a 100%); padding: 50px 0; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -50px; right: -50px; width: 300px; height: 300px; border-radius: 50%; background: rgba(245,166,35,0.05);"></div>
+    <div style="position: absolute; bottom: -80px; left: -30px; width: 200px; height: 200px; border-radius: 50%; background: rgba(245,166,35,0.05);"></div>
+    <div style="position: absolute; top: 20px; right: 200px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); opacity: 0.6;"></div>
+
+    <div class="container position-relative" data-aos="fade-up">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div style="width: 30px; height: 3px; background: var(--accent); border-radius: 2px;"></div>
+                    <span style="color: var(--accent); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">Help Center</span>
+                </div>
+                <h1 class="fw-bold text-white mb-3" style="font-size: 2.5rem; line-height: 1.2;">
+                    Frequently Asked <span style="color: var(--accent);">Questions</span>
+                </h1>
+                <p class="mb-4" style="color: rgba(255,255,255,0.6); max-width: 450px;">
+                    Everything you need to know about our services, delivery, and printing process.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="https://wa.me/911112220000" target="_blank" class="btn btn-success fw-semibold px-4">
+                        <i class="fab fa-whatsapp me-2"></i>Ask on WhatsApp
+                    </a>
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-outline-light px-4">
+                        <i class="fas fa-envelope me-2"></i>Contact Us
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-flex align-items-center justify-content-center">
+                <div class="rounded-4 p-5 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                    <i class="fas fa-question-circle fa-5x mb-3" style="color: var(--accent); opacity: 0.8;"></i>
+                    <h5 class="text-white fw-bold mb-1">Got Questions?</h5>
+                    <p style="color: rgba(255,255,255,0.5);" class="mb-0">We have answers for everything</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+
+            <!-- Contact Info -->
+            <div class="col-lg-4" data-aos="fade-right">
+                <h5 class="fw-bold mb-4" style="color: var(--primary);">Get In Touch</h5>
+
+                <div class="d-flex align-items-start mb-4">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width:45px; height:45px; background: linear-gradient(135deg, #1a2e4a, #2d4f7c);">
+                        <i class="fas fa-phone text-warning small"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="color: var(--primary);">Phone</h6>
+                        <a href="tel:1112220000" class="text-muted text-decoration-none">1112220000</a>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start mb-4">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width:45px; height:45px; background: linear-gradient(135deg, #1a2e4a, #2d4f7c);">
+                        <i class="fas fa-envelope text-warning small"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="color: var(--primary);">Email</h6>
+                        <a href="mailto:printstudio@example.com" class="text-muted text-decoration-none">printstudio@example.com</a>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start mb-4">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width:45px; height:45px; background: linear-gradient(135deg, #1a2e4a, #2d4f7c);">
+                        <i class="fas fa-map-marker-alt text-warning small"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="color: var(--primary);">Address</h6>
+                        <p class="text-muted small mb-0">1671, 3rd Cross Road, AECS Layout-A Block, Singasandra, Bengaluru - 560068</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-start mb-4">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width:45px; height:45px; background: linear-gradient(135deg, #1a2e4a, #2d4f7c);">
+                        <i class="fas fa-clock text-warning small"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1" style="color: var(--primary);">Business Hours</h6>
+                        <p class="text-muted small mb-0">Mon - Sat: 9:00 AM - 8:00 PM</p>
+                        <p class="text-muted small mb-0">Sunday: 10:00 AM - 5:00 PM</p>
+                    </div>
+                </div>
+
+                <!-- Social -->
+                <div class="d-flex gap-2 mt-4">
+                    <a href="https://wa.me/911112220000" target="_blank" class="btn btn-success fw-semibold px-4">
+                        <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                    </a>
+                    <a href="tel:1112220000" class="btn btn-outline-primary fw-semibold px-4">
+                        <i class="fas fa-phone me-2"></i>Call
+                    </a>
+                </div>
+            </div>
+
+            <!-- Map + Form -->
+            <div class="col-lg-8" data-aos="fade-left">
+                <!-- Google Map -->
+                <div class="rounded-4 overflow-hidden shadow-sm mb-4" style="height: 300px;">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.0!2d77.6!3d12.9!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDU0JzAwLjAiTiA3N8KwMzYnMDAuMCJF!5e0!3m2!1sen!2sin!4v1234567890"
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+                    </iframe>
+                </div>
+
+                <!-- Quick Contact Form -->
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <h6 class="fw-bold mb-4" style="color: var(--primary);">Send us a Message</h6>
+                    <form action="https://formsubmit.co/printstudio@example.com" method="POST">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_subject" value="New message from Print Studio website">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Your Name</label>
+                                <input type="text" name="name" class="form-control" placeholder="Enter your name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Phone Number</label>
+                                <input type="tel" name="phone" class="form-control" placeholder="Enter your phone">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="Enter your email">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Message</label>
+                                <textarea name="message" class="form-control" rows="4" placeholder="Tell us what you need..." required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-warning fw-semibold px-5">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

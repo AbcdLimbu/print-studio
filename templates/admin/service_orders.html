@@ -1,0 +1,67 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Service Orders - Admin{% endblock %}
+{% block page_title %}Service Orders{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-0">
+        {% if orders %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead style="background: #f8f9fa;">
+                    <tr>
+                        <th class="px-4 py-3 text-muted small">#</th>
+                        <th class="py-3 text-muted small">Customer</th>
+                        <th class="py-3 text-muted small">Service</th>
+                        <th class="py-3 text-muted small">Design Type</th>
+                        <th class="py-3 text-muted small">Quantity</th>
+                        <th class="py-3 text-muted small">Details</th>
+                        <th class="py-3 text-muted small">File</th>
+                        <th class="py-3 text-muted small">Date</th>
+                        <th class="py-3 text-muted small">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td class="px-4 small fw-semibold">{{ order.id }}</td>
+                        <td class="small">{{ order.user.name }}<br><span class="text-muted">{{ order.user.phone }}</span></td>
+                        <td class="small">{{ order.service.name }}</td>
+                        <td>
+                            <span class="badge rounded-pill" style="background: {% if order.design_type == 'custom' %}#fff3e0; color:#e65100{% else %}#e3f2fd; color:#1565c0{% endif %};">
+                                {{ order.design_type | capitalize }}
+                            </span>
+                        </td>
+                        <td class="small">{{ order.quantity }}</td>
+                        <td class="small text-muted" style="max-width:150px;">{{ order.design_details or '—' }}</td>
+                        <td class="small">
+                            {% if order.design_file_url %}
+                            <a href="{{ order.design_file_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download"></i>
+                            </a>
+                            {% else %}—{% endif %}
+                        </td>
+                        <td class="small text-muted">{{ order.created_at.strftime('%d %b %Y') }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.update_service_order', id=order.id) }}">
+                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width:140px;">
+                                    {% for status in ['Placed', 'Reviewing', 'Designing', 'Printing', 'Delivered'] %}
+                                    <option {% if order.status == status %}selected{% endif %}>{{ status }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-tasks fa-3x text-muted mb-3"></i>
+            <p class="text-muted">No service orders yet</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

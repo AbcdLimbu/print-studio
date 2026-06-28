@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile - Print Studio{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:50px; height:50px; background: var(--accent);">
+                            <h4 class="text-white fw-bold mb-0">{{ current_user.name[0].upper() }}</h4>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0" style="color: var(--primary);">Edit Profile</h5>
+                            <small class="text-muted">Update your personal information</small>
+                        </div>
+                    </div>
+
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Full Name</label>
+                            <input type="text" name="name" class="form-control" value="{{ current_user.name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email Address</label>
+                            <input type="email" class="form-control" value="{{ current_user.email }}" disabled>
+                            <small class="text-muted">Email cannot be changed</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Phone Number</label>
+                            <input type="text" name="phone" class="form-control" value="{{ current_user.phone or '' }}" placeholder="Enter your phone number">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Default Delivery Address</label>
+                            <textarea name="address" class="form-control" rows="3" placeholder="Enter your default delivery address">{{ current_user.address or '' }}</textarea>
+                            <small class="text-muted">This will be pre-filled when you place orders</small>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-warning fw-semibold px-4">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                            <a href="{{ url_for('orders.profile') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}Return Request - Print Studio{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:70px; height:70px; background: #ffebee;">
+                            <i class="fas fa-undo fa-2x" style="color: #c62828;"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1" style="color: var(--primary);">Return Request</h5>
+                        <p class="text-muted small mb-0">{{ order_type.capitalize() }} Order #{{ order_id }}</p>
+                        <span class="badge rounded-pill mt-2" style="background: #fff3e0; color: var(--accent);">
+                            <i class="fas fa-clock me-1"></i>{{ 3 - days_since }} day(s) remaining in return window
+                        </span>
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data">
+
+                        <!-- Reason -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Reason for Return</label>
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                {% for reason in ['Damaged product', 'Wrong item delivered', 'Poor print quality', 'Wrong color/size', 'Missing items', 'Not as described'] %}
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.querySelector('textarea[name=reason]').value='{{ reason }}'">
+                                    {{ reason }}
+                                </button>
+                                {% endfor %}
+                            </div>
+                            <textarea name="reason" class="form-control" rows="3" placeholder="Describe why you want to return this order..." required></textarea>
+                        </div>
+
+                        <!-- Resolution -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">What would you prefer?</label>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <input type="radio" name="resolution" id="replacement" value="replacement" class="d-none" required>
+                                    <label for="replacement" class="resolution-card card border-2 rounded-4 p-3 text-center w-100" style="cursor:pointer; border-color: #ddd; transition: all 0.2s;">
+                                        <i class="fas fa-box fa-2x mb-2" style="color: var(--primary);"></i>
+                                        <p class="fw-bold mb-0 small" style="color: var(--primary);">Replacement</p>
+                                        <small class="text-muted">Get a new item</small>
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" name="resolution" id="refund" value="refund" class="d-none">
+                                    <label for="refund" class="resolution-card card border-2 rounded-4 p-3 text-center w-100" style="cursor:pointer; border-color: #ddd; transition: all 0.2s;">
+                                        <i class="fas fa-rupee-sign fa-2x mb-2" style="color: var(--primary);"></i>
+                                        <p class="fw-bold mb-0 small" style="color: var(--primary);">Refund</p>
+                                        <small class="text-muted">Get your money back</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Photo Upload -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Upload Photos of the Issue <span class="text-danger">*</span></label>
+                            <input type="file" name="image" class="form-control" accept="image/*" required>
+                            <small class="text-muted">Please upload a clear photo showing the issue. This helps us process your return faster.</small>
+                        </div>
+
+                        <!-- Note -->
+                        <div class="alert" style="background: #fff3e0; border: none; border-radius: 12px;">
+                            <i class="fas fa-info-circle me-2" style="color: var(--accent);"></i>
+                            <small style="color: var(--primary);">Our team will review your request within 24 hours and contact you via phone at <strong>{{ current_user.phone }}</strong>.</small>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-danger fw-semibold px-4 w-100">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Return Request
+                            </button>
+                        </div>
+                        <a href="{{ url_for('orders.dashboard') }}" class="btn btn-outline-secondary w-100 mt-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('input[name="resolution"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        document.querySelectorAll('.resolution-card').forEach(card => {
+            card.style.borderColor = '#ddd';
+            card.style.background = 'white';
+        });
+        this.nextElementSibling.style.borderColor = 'var(--accent)';
+        this.nextElementSibling.style.background = '#fff3e0';
+    });
+});
+</script>
+{% endblock %}

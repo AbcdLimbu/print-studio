@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block title %}Services - Print Studio{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section style="background: linear-gradient(135deg, #1a2e4a 0%, #2d4f7c 60%, #1a2e4a 100%); padding: 50px 0; position: relative; overflow: hidden;">
+    <!-- Background decoration -->
+    <div style="position: absolute; top: -50px; right: -50px; width: 300px; height: 300px; border-radius: 50%; background: rgba(245,166,35,0.05);"></div>
+    <div style="position: absolute; bottom: -80px; left: -30px; width: 200px; height: 200px; border-radius: 50%; background: rgba(245,166,35,0.05);"></div>
+    <div style="position: absolute; top: 20px; right: 200px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); opacity: 0.6;"></div>
+    <div style="position: absolute; bottom: 30px; right: 400px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); opacity: 0.4;"></div>
+
+    <div class="container position-relative" data-aos="fade-up">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div style="width: 30px; height: 3px; background: var(--accent); border-radius: 2px;"></div>
+                    <span style="color: var(--accent); font-size: 0.85rem; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;">What We Offer</span>
+                </div>
+                <h1 class="fw-bold text-white mb-3" style="font-size: 2.5rem; line-height: 1.2;">
+                    Professional <span style="color: var(--accent);">Printing</span><br>Services
+                </h1>
+                <p class="mb-4" style="color: rgba(255,255,255,0.6); max-width: 450px;">
+                    From digital printing to custom designs — we offer end to end printing solutions tailored to your needs.
+                </p>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="#services-grid" class="btn btn-warning fw-semibold px-4">
+                        <i class="fas fa-print me-2"></i>View Services
+                    </a>
+                    <a href="https://wa.me/911112220000" target="_blank" class="btn btn-outline-light px-4">
+                        <i class="fab fa-whatsapp me-2"></i>WhatsApp Us
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="rounded-4 p-3 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);" data-aos="fade-up" data-aos-delay="100">
+                            <i class="fas fa-print fa-2x mb-2" style="color: var(--accent);"></i>
+                            <h4 class="fw-bold text-white mb-0">{{ services|length }}+</h4>
+                            <small style="color: rgba(255,255,255,0.5);">Services</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="rounded-4 p-3 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);" data-aos="fade-up" data-aos-delay="200">
+                            <i class="fas fa-users fa-2x mb-2" style="color: var(--accent);"></i>
+                            <h4 class="fw-bold text-white mb-0">500+</h4>
+                            <small style="color: rgba(255,255,255,0.5);">Happy Clients</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="rounded-4 p-3 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);" data-aos="fade-up" data-aos-delay="300">
+                            <i class="fas fa-bolt fa-2x mb-2" style="color: var(--accent);"></i>
+                            <h4 class="fw-bold text-white mb-0">24hr</h4>
+                            <small style="color: rgba(255,255,255,0.5);">Turnaround</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="rounded-4 p-3 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);" data-aos="fade-up" data-aos-delay="400">
+                            <i class="fas fa-paint-brush fa-2x mb-2" style="color: var(--accent);"></i>
+                            <h4 class="fw-bold text-white mb-0">Custom</h4>
+                            <small style="color: rgba(255,255,255,0.5);">Designs</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" id="services-grid">
+    <div class="container">
+        {% if services %}
+        <div class="row g-4">
+            {% for service in services %}
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 100 }}">
+                <div class="card border-0 shadow-sm rounded-4 h-100" style="transition: transform 0.3s, box-shadow 0.3s; overflow:hidden;" onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow=''">
+                    <!-- Image -->
+                    <div style="height:200px; overflow:hidden; background:#f8f9fa;">
+                        {% if service.image_url %}
+                        <img src="{{ service.image_url }}" alt="{{ service.name }}" style="width:100%; height:100%; object-fit:cover; transition: transform 0.4s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        {% else %}
+                        <div class="d-flex align-items-center justify-content-center h-100">
+                            <i class="fas fa-print fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-2" style="color: var(--primary);">{{ service.name }}</h5>
+                        {% if service.starting_price %}
+                        <p class="fw-bold mb-2" style="color: var(--accent);">Starting from ₹{{ service.starting_price }}</p>
+                        {% endif %}
+                        <p class="text-muted small mb-3" style="display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;">
+                            {{ service.description or 'Professional printing service with premium quality output.' }}
+                        </p>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('services.detail', id=service.id) }}" class="btn btn-warning fw-semibold flex-grow-1">
+                                Order Service
+                            </a>
+                            <a href="https://wa.me/911112220000?text=Hi, I'm interested in {{ service.name }}" target="_blank" class="btn btn-outline-success">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-print fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No services available yet</h5>
+            <p class="text-muted">Please check back soon or contact us directly</p>
+            <a href="https://wa.me/911112220000" class="btn btn-success">
+                <i class="fab fa-whatsapp me-2"></i>WhatsApp Us
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5" style="background: #f8f9fa;">
+    <div class="container text-center" data-aos="zoom-in">
+        <h4 class="fw-bold mb-2" style="color: var(--primary);">Need a Custom Service?</h4>
+        <p class="text-muted mb-4">Can't find what you're looking for? Contact us directly and we'll help you out.</p>
+        <a href="https://wa.me/911112220000" target="_blank" class="btn btn-success btn-lg px-4 fw-semibold">
+            <i class="fab fa-whatsapp me-2"></i>Chat on WhatsApp
+        </a>
+    </div>
+</section>
+
+{% endblock %}

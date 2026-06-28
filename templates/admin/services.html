@@ -1,0 +1,72 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Services - Admin{% endblock %}
+{% block page_title %}Manage Services{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="fw-bold mb-0" style="color: var(--primary);">All Services</h5>
+    <a href="{{ url_for('admin.add_service') }}" class="btn btn-warning fw-semibold">
+        <i class="fas fa-plus me-2"></i>Add Service
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-0">
+        {% if services %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead style="background: #f8f9fa;">
+                    <tr>
+                        <th class="px-4 py-3 text-muted small">#</th>
+                        <th class="py-3 text-muted small">Image</th>
+                        <th class="py-3 text-muted small">Name</th>
+                        <th class="py-3 text-muted small">Starting Price</th>
+                        <th class="py-3 text-muted small">Status</th>
+                        <th class="py-3 text-muted small">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                    <tr>
+                        <td class="px-4 small">{{ service.id }}</td>
+                        <td>
+                            {% if service.image_url %}
+                            <img src="{{ service.image_url }}" alt="{{ service.name }}" style="width:50px; height:50px; object-fit:cover; border-radius:8px;">
+                            {% else %}
+                            <div style="width:50px; height:50px; background:#f0f0f0; border-radius:8px; display:flex; align-items:center; justify-content:center;">
+                                <i class="fas fa-print text-muted"></i>
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td class="small fw-semibold">{{ service.name }}</td>
+                        <td class="small">{% if service.starting_price %}₹{{ service.starting_price }}{% else %}—{% endif %}</td>
+                        <td>
+                            {% if service.is_active %}
+                            <span class="badge rounded-pill" style="background:#e8f5e9; color:#2e7d32;">Active</span>
+                            {% else %}
+                            <span class="badge rounded-pill" style="background:#ffebee; color:#c62828;">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_service', id=service.id) }}" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{{ url_for('admin.delete_service', id=service.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this service?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-print fa-3x text-muted mb-3"></i>
+            <p class="text-muted">No services yet. Add your first service!</p>
+            <a href="{{ url_for('admin.add_service') }}" class="btn btn-warning">Add Service</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

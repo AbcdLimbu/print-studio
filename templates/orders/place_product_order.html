@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}Order {{ product.name }} - Print Studio{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <nav class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.home') }}" style="color: var(--accent);">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('products.index') }}" style="color: var(--accent);">Products</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('products.detail', id=product.id) }}" style="color: var(--accent);">{{ product.name }}</a></li>
+                <li class="breadcrumb-item active text-muted">Place Order</li>
+            </ol>
+        </nav>
+
+        <div class="row g-5 justify-content-center">
+
+            <!-- Order Summary -->
+            <div class="col-lg-4" data-aos="fade-right">
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <h6 class="fw-bold mb-3" style="color: var(--primary);">Order Summary</h6>
+                    <div style="height:200px; overflow:hidden; border-radius:12px; background:#f8f9fa;" class="mb-3">
+                        {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" style="width:100%; height:100%; object-fit:cover;">
+                        {% else %}
+                        <div class="d-flex align-items-center justify-content-center h-100">
+                            <i class="fas fa-box fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <h6 class="fw-bold" style="color: var(--primary);">{{ product.name }}</h6>
+                    {% if product.category %}
+                    <p class="text-muted small mb-2">{{ product.category }}</p>
+                    {% endif %}
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted small">Price per unit</span>
+                        <span class="fw-bold" style="color: var(--accent);">₹{{ product.price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2" id="total-row">
+                        <span class="text-muted small">Total</span>
+                        <span class="fw-bold" style="color: var(--accent);" id="total-price">₹{{ product.price }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Form -->
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <h6 class="fw-bold mb-4" style="color: var(--primary);">Delivery Details</h6>
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Full Name</label>
+                            <input type="text" class="form-control" value="{{ current_user.name }}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Phone</label>
+                            <input type="text" class="form-control" value="{{ current_user.phone }}" disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Quantity</label>
+                            <input type="number" name="quantity" class="form-control" min="1" max="{{ product.stock }}" value="1" id="qty-input" required>
+                            <small class="text-muted">{{ product.stock }} units available</small>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Delivery Address</label>
+                            <textarea name="delivery_address" class="form-control" rows="3" placeholder="Enter your full delivery address..." required>{{ current_user.address or '' }}</textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Payment Method</label>
+                            <div class="d-flex flex-column gap-2">
+                                <label class="p-3 rounded-3 d-flex align-items-center gap-3" style="border: 2px solid var(--accent); background: #fff3e0; cursor: pointer;">
+                                    <input type="radio" name="payment_method" value="cod" checked>
+                                    <div>
+                                        <p class="fw-bold mb-0" style="color: var(--primary);">💵 Cash on Delivery</p>
+                                        <small class="text-muted">Pay when your order arrives</small>
+                                    </div>
+                                </label>
+                                <label class="p-3 rounded-3 d-flex align-items-center gap-3" style="border: 2px solid #ddd; background: #f8f9fa; cursor: not-allowed; opacity: 0.6;">
+                                    <input type="radio" name="payment_method" value="online" disabled>
+                                    <div>
+                                        <p class="fw-bold mb-0" style="color: var(--primary);">💳 Online Payment</p>
+                                        <small class="text-muted">Coming soon — UPI, Cards, Wallets</small>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning fw-semibold w-100 btn-lg">
+                            <i class="fas fa-check-circle me-2"></i>Confirm Order
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const price = {{ product.price }};
+document.getElementById('qty-input').addEventListener('input', function() {
+    const qty = parseInt(this.value) || 1;
+    document.getElementById('total-price').textContent = '₹' + (price * qty).toFixed(2);
+});
+</script>
+{% endblock %}

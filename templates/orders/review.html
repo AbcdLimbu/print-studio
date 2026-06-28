@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block title %}Rate & Review - Print Studio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+    .star-rating input { display: none; }
+    .star-rating label {
+        font-size: 2.5rem;
+        color: #ddd;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: var(--accent);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    <div class="text-center mb-4">
+                        <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:70px; height:70px; background: #fff3e0;">
+                            <i class="fas fa-star fa-2x" style="color: var(--accent);"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1" style="color: var(--primary);">How was your experience?</h5>
+                        <p class="text-muted small mb-0">{{ order_type.capitalize() }} Order #{{ order_id }}</p>
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data">
+
+                        <!-- Star Rating -->
+                        <div class="mb-4 text-center">
+                            <label class="form-label fw-semibold d-block mb-3">Your Rating</label>
+                            <div class="star-rating justify-content-center">
+                                {% for i in [5,4,3,2,1] %}
+                                <input type="radio" name="rating" id="star{{ i }}" value="{{ i }}" {% if i == 5 %}checked{% endif %}>
+                                <label for="star{{ i }}"><i class="fas fa-star"></i></label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Review -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Write a Review</label>
+                            <textarea name="review" class="form-control" rows="4" placeholder="Share your experience with Print Studio..."></textarea>
+                        </div>
+
+                        <!-- Issue Section -->
+                        <div class="mb-4 p-3 rounded-3" style="background: #f8f9fa;">
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" name="has_issue" id="has_issue" onchange="toggleIssue(this.checked)">
+                                <label class="form-check-label fw-semibold" for="has_issue" style="color: var(--primary);">
+                                    I have an issue with my order
+                                </label>
+                            </div>
+                            <div id="issue_section" class="d-none">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold small">Describe the Issue</label>
+                                    <div class="d-flex flex-wrap gap-2 mb-2">
+                                        {% for issue in ['Wrong product', 'Poor quality', 'Damaged item', 'Wrong color/size', 'Missing items', 'Late delivery'] %}
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.querySelector('textarea[name=issue_description]').value='{{ issue }}'">
+                                            {{ issue }}
+                                        </button>
+                                        {% endfor %}
+                                    </div>
+                                    <textarea name="issue_description" class="form-control" rows="3" placeholder="Tell us what went wrong..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="form-label fw-semibold small">Upload Photo (Optional)</label>
+                                    <input type="file" name="issue_image" class="form-control" accept="image/*">
+                                    <small class="text-muted">Upload a photo showing the issue</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-warning fw-semibold px-4 w-100">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Feedback
+                            </button>
+                        </div>
+                        <a href="{{ url_for('orders.dashboard') }}" class="btn btn-outline-secondary w-100 mt-2">Skip for now</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleIssue(checked) {
+    const section = document.getElementById('issue_section');
+    if (checked) {
+        section.classList.remove('d-none');
+    } else {
+        section.classList.add('d-none');
+    }
+}
+</script>
+{% endblock %}

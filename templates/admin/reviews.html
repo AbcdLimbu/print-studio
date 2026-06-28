@@ -1,0 +1,80 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Reviews & Feedback - Admin{% endblock %}
+{% block page_title %}Reviews & Feedback{% endblock %}
+
+{% block content %}
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-0">
+        {% if reviews %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead style="background: #f8f9fa;">
+                    <tr>
+                        <th class="px-4 py-3 text-muted small">#</th>
+                        <th class="py-3 text-muted small">Customer</th>
+                        <th class="py-3 text-muted small">Order</th>
+                        <th class="py-3 text-muted small">Rating</th>
+                        <th class="py-3 text-muted small">Review</th>
+                        <th class="py-3 text-muted small">Issue</th>
+                        <th class="py-3 text-muted small">Date</th>
+                        <th class="py-3 text-muted small">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in reviews %}
+                    <tr>
+                        <td class="px-4 small">{{ review.id }}</td>
+                        <td class="small">
+                            {{ review.user.name }}<br>
+                            <span class="text-muted">{{ review.user.phone }}</span>
+                        </td>
+                        <td class="small">
+                            <span class="badge rounded-pill" style="background:#fff3e0; color:var(--accent);">{{ review.order_type | capitalize }}</span>
+                            <span class="d-block text-muted">#{{ review.order_id }}</span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                {% for i in range(1, 6) %}
+                                <i class="fas fa-star small" style="color: {% if i <= review.rating %}var(--accent){% else %}#ddd{% endif %};"></i>
+                                {% endfor %}
+                            </div>
+                            <small class="text-muted">{{ review.rating }}/5</small>
+                        </td>
+                        <td class="small" style="max-width:180px;">{{ review.review or '—' }}</td>
+                        <td class="small">
+                            {% if review.has_issue %}
+                            <span class="badge rounded-pill mb-1" style="background:#ffebee; color:#c62828;">Has Issue</span>
+                            <p class="text-muted mb-1" style="font-size:0.75rem;">{{ review.issue_description }}</p>
+                            {% if review.issue_image_url %}
+                            <a href="{{ review.issue_image_url }}" target="_blank">
+                                <img src="{{ review.issue_image_url }}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+                            </a>
+                            {% endif %}
+                            {% else %}
+                            <span class="text-muted small">No issue</span>
+                            {% endif %}
+                        </td>
+                        <td class="small text-muted">{{ review.created_at.strftime('%d %b %Y') }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.update_review', id=review.id) }}">
+                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width:120px;">
+                                    {% for status in ['Pending', 'Reviewing', 'Resolved'] %}
+                                    <option {% if review.status == status %}selected{% endif %}>{{ status }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-star fa-3x text-muted mb-3"></i>
+            <p class="text-muted">No reviews yet — waiting for customers to review their orders!</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
